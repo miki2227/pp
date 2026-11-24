@@ -1,0 +1,36 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+
+X = torch.randn(100,10)
+Y = torch.randint(0,2,(100,))
+
+model = nn.Sequential(
+    nn.Linear(10,16),
+    nn.ReLU(),
+    nn.Linear(16,2)
+)
+
+loss_fn = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(),lr=0.01)
+
+losses = []
+
+for epoch in range(100):
+    output = model(X)
+    loss = loss_fn(output,Y)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    losses.append(loss.item())
+
+print("Final Loss:",loss.item())
+
+plt.plot(losses)
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.title("Neural Network Loss")
+plt.show()
