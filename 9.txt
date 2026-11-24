@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <cuda_runtime.h>
+
+__global__ void display()
+{
+    printf("Block %d Thread %d\n", blockIdx.x, threadIdx.x);
+}
+
+int main()
+{
+    cudaDeviceProp p;
+    cudaGetDeviceProperties(&p, 0);
+
+    printf("GPU Name: %s\n", p.name);
+    printf("Number of multiprocessors: %d\n", p.multiProcessorCount);
+    printf("Maximum threads per block: %d\n", p.maxThreadsPerBlock);
+    printf("Maximum threads per multiprocessor: %d\n", p.maxThreadsPerMultiProcessor);
+    printf("Global memory: %zu bytes\n", p.totalGlobalMem);
+    printf("Shared memory per block: %zu bytes\n", p.sharedMemPerBlock);
+    printf("Warp size: %d\n", p.warpSize);
+    printf("Compute Capability Major: %d\n", p.major);
+    printf("Compute Capability Minor: %d\n", p.minor);
+
+    printf("\nKernel Launch:\n");
+
+    display<<<2,4>>>();
+
+    cudaDeviceSynchronize();
+
+    return 0;
+}
